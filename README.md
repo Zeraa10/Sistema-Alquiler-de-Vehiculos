@@ -3,7 +3,7 @@
 ALQUIZERA es una aplicación web para gestionar el alquiler de vehículos, desarrollada con Django y PostgreSQL, que ofrece paneles separados para clientes y administradores, reservas en línea y gestión completa del inventario de vehículos.
 
 ## **Características principales**
-**-Autenticación y roles**
+**Autenticación y roles**
 
 -Registro e inicio de sesión de clientes.
 
