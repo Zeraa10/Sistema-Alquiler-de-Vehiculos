@@ -11,7 +11,7 @@ ALQUIZERA es una aplicación web para gestionar el alquiler de vehículos, desar
 
 -Administrador creado desde la consola (no se registra vía web).
 
-**-Panel de cliente**
+**Panel de cliente**
 
 -Ver vehículos disponibles.
 
@@ -23,7 +23,7 @@ ALQUIZERA es una aplicación web para gestionar el alquiler de vehículos, desar
 
 -Actualizar datos de perfil.
 
-**-Panel de administración**
+**Panel de administración**
 
 -Gestión de clientes.
 
@@ -35,20 +35,20 @@ ALQUIZERA es una aplicación web para gestionar el alquiler de vehículos, desar
 
 -Gestión de categorías y subcategorías de licencia de conducir.
 
-**-Landing page**
+**Landing page**
 
 -Página de inicio pública con información de ALQUIZERA.
 
 -Enlaces directos para ver vehículos, iniciar sesión y registrarse.
 
 ## **Tecnologías utilizadas**
-**-Backend:** Django (Python)
+**Backend:** Django (Python)
 
-**-Base de datos:** PostgreSQL
+**Base de datos:** PostgreSQL
 
-**-Frontend:** HTML5, CSS3 (estilos personalizados / Bootstrap ligero)
+**Frontend:** HTML5, CSS3 (estilos personalizados / Bootstrap ligero)
 
-**-Otros:** Git, entorno virtual de Python (venv)
+**Otros:** Git, entorno virtual de Python (venv)
 
 ## **Requisitos previos**
 -Python 3.10+
