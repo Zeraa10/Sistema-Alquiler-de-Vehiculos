@@ -1,0 +1,268 @@
+{% extends 'base.html' %}
+
+{% block title %}Registrar Devolución - ALQUIZERA{% endblock %}
+
+{% block content %}
+<div class="panel-container">
+    <div class="panel-header">
+        <h1>🔄 Registrar Devolución</h1>
+        <p>Completa el formulario para registrar la devolución del vehículo</p>
+    </div>
+
+    <div class="actions-bar">
+        <a href="{% url 'cliente_mis_reservas' %}" class="btn btn-secondary">← Volver a Mis Reservas</a>
+    </div>
+
+    <div class="form-container">
+        <div class="detail-card">
+            <h3>Información de la Reserva</h3>
+            <div class="detail-row">
+                <span class="label">Vehículo:</span>
+                <span class="value">{{ reserva.vehiculo.marca }} {{ reserva.vehiculo.modelo }} - {{ reserva.vehiculo.placa }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Fecha Inicio:</span>
+                <span class="value">{{ reserva.fecha_inicio }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Fecha Fin (Esperada):</span>
+                <span class="value">{{ reserva.fecha_fin }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Total:</span>
+                <span class="value">${{ reserva.total|floatformat:2 }}</span>
+            </div>
+        </div>
+
+        <form method="post" novalidate>
+            {% csrf_token %}
+            
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="form-group">
+                <label for="{{ form.fecha_devolucion.id_for_label }}">Fecha de Devolución *</label>
+                {{ form.fecha_devolucion }}
+                {% if form.fecha_devolucion.errors %}
+                    <ul class="errorlist">
+                        {% for error in form.fecha_devolucion.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.estado_devolucion.id_for_label }}">Estado del Vehículo *</label>
+                {{ form.estado_devolucion }}
+                {% if form.estado_devolucion.errors %}
+                    <ul class="errorlist">
+                        {% for error in form.estado_devolucion.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                <small class="form-text text-muted">
+                    Selecciona el estado en que devuelves el vehículo:
+                    <ul>
+                        <li><strong>Entregado:</strong> Sin problemas</li>
+                        <li><strong>Atrasado:</strong> Devuelto después de la fecha esperada (se aplicará penalización)</li>
+                        <li><strong>Dañado:</strong> El vehículo tiene daños (se aplicará penalización del 20%)</li>
+                    </ul>
+                </small>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Registrar Devolución</button>
+                <a href="{% url 'cliente_mis_reservas' %}" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+.panel-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.panel-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 30px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
+.panel-header h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.panel-header p {
+    margin: 10px 0 0 0;
+    opacity: 0.9;
+}
+
+.actions-bar {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.form-container {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.detail-card {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.detail-card h3 {
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.detail-row .label {
+    font-weight: bold;
+    color: #666;
+}
+
+.detail-row .value {
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    font-family: Arial, sans-serif;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-text {
+    display: block;
+    margin-top: 5px;
+    font-size: 12px;
+    color: #666;
+}
+
+.form-text ul {
+    margin: 10px 0;
+    padding-left: 20px;
+}
+
+.form-text li {
+    margin-bottom: 5px;
+}
+
+.errorlist {
+    list-style: none;
+    padding: 0;
+    margin: 8px 0 0 0;
+    color: #dc3545;
+    font-size: 13px;
+}
+
+.errorlist li {
+    margin-bottom: 4px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 30px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.btn-primary {
+    background-color: #667eea;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #5568d3;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+.alert {
+    padding: 15px 20px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+</style>
+{% endblock %}

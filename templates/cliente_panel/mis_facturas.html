@@ -1,0 +1,227 @@
+{% extends 'base.html' %}
+
+{% block title %}Mis Facturas - ALQUIZERA{% endblock %}
+
+{% block content %}
+<div class="panel-container">
+    <div class="panel-header">
+        <h1>💳 Mis Facturas</h1>
+        <p>Historial de tus facturas de alquiler</p>
+    </div>
+
+    <div class="actions-bar">
+        <a href="{% url 'panel_cliente' %}" class="btn btn-secondary">← Volver al Panel</a>
+    </div>
+
+    <!-- Formulario de Filtros -->
+    <div class="filter-container">
+        <form method="get" class="filter-form">
+            <div class="filter-group">
+                <input type="text" name="numero" placeholder="Número de factura" value="{{ form.numero.value|default:'' }}" class="filter-input">
+                <input type="number" name="monto_min" placeholder="Monto mínimo" step="0.01" value="{{ form.monto_min.value|default:'' }}" class="filter-input">
+                <input type="number" name="monto_max" placeholder="Monto máximo" step="0.01" value="{{ form.monto_max.value|default:'' }}" class="filter-input">
+                <input type="date" name="fecha_desde" value="{{ form.fecha_desde.value|default:'' }}" class="filter-input" placeholder="Desde">
+                <input type="date" name="fecha_hasta" value="{{ form.fecha_hasta.value|default:'' }}" class="filter-input" placeholder="Hasta">
+                <button type="submit" class="btn btn-primary">🔍 Filtrar</button>
+                <a href="{% url 'cliente_mis_facturas' %}" class="btn btn-secondary">Limpiar</a>
+            </div>
+        </form>
+    </div>
+
+    {% if facturas %}
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Número</th>
+                    <th>Reserva</th>
+                    <th>Fecha Emisión</th>
+                    <th>Monto</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for factura in facturas %}
+                <tr>
+                    <td>{{ factura.numero }}</td>
+                    <td>Reserva #{{ factura.reserva.id }}</td>
+                    <td>{{ factura.fecha_emision|date:"d/m/Y" }}</td>
+                    <td>${{ factura.monto|floatformat:0 }} COP</td>
+                    <td>
+                        <a href="{% url 'cliente_factura_detail' factura.pk %}" class="btn btn-sm btn-primary">Ver Detalle</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <p>No tienes facturas que coincidan con los filtros.</p>
+        <a href="{% url 'panel_cliente' %}" class="btn btn-primary">Volver al Panel</a>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.panel-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.panel-header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 20px 0;
+    border-bottom: 2px solid #007bff;
+}
+
+.panel-header h1 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.panel-header p {
+    color: #666;
+    font-size: 16px;
+}
+
+.actions-bar {
+    margin-bottom: 20px;
+}
+
+.filter-container {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.filter-form {
+    width: 100%;
+}
+
+.filter-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.filter-input {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.filter-input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+.table-container {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table thead {
+    background-color: #f8f9fa;
+}
+
+.data-table th {
+    padding: 12px;
+    text-align: left;
+    font-weight: bold;
+    color: #333;
+    border-bottom: 2px solid #ddd;
+}
+
+.data-table td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    color: #666;
+}
+
+.data-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 12px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.empty-state p {
+    color: #666;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+    .filter-group {
+        flex-direction: column;
+    }
+
+    .filter-input {
+        width: 100%;
+    }
+
+    .table-container {
+        overflow-x: auto;
+    }
+}
+</style>
+{% endblock %}
+
+

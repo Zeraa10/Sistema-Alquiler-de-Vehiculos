@@ -1,0 +1,423 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if object %}Editar{% else %}Nueva{% endif %} Reserva - ALQUIZERA{% endblock %}
+
+{% block content %}
+<div class="content-container">
+    <div class="page-header">
+        <h1>
+            {% if object %}
+                ✏️ Aprobar/Rechazar Reserva #{{ object.id }}
+            {% else %}
+                ➕ Nueva Reserva
+            {% endif %}
+        </h1>
+        <a href="{% url 'reserva_list' %}" class="btn btn-secondary">← Volver</a>
+    </div>
+
+    <div class="form-container">
+        {% if object %}
+            <!-- Modo EDICIÓN (Admin aprobación) -->
+            <div class="info-box">
+                <h2>📋 Información de la Reserva</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">👤 Cliente:</span>
+                        <span class="info-value">{{ object.cliente.nombre }} {{ object.cliente.apellido }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">🚗 Vehículo:</span>
+                        <span class="info-value">{{ object.vehiculo.marca }} {{ object.vehiculo.modelo }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">📍 Placa:</span>
+                        <span class="info-value">{{ object.vehiculo.placa }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">📅 Inicio:</span>
+                        <span class="info-value">{{ object.fecha_inicio|date:"d/m/Y" }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">📅 Fin:</span>
+                        <span class="info-value">{{ object.fecha_fin|date:"d/m/Y" }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">💰 Total:</span>
+                        <span class="info-value price">${{ object.total|floatformat:0 }} COP</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">📊 Estado Actual:</span>
+                        <span class="badge badge-{{ object.estado }}">{{ object.get_estado_display }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="approval-section">
+                <h3>✅ Cambiar Estado de la Reserva</h3>
+                <p class="instructions">Selecciona el estado para aprobar o rechazar esta reserva. Si apruebas, se creará automáticamente una factura.</p>
+        {% endif %}
+
+        <form method="post" novalidate>
+            {% csrf_token %}
+            
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% if object %}
+                <!-- Modo edición: solo estado -->
+                <div class="form-group">
+                    <label for="{{ form.estado.id_for_label }}"><strong>Cambiar Estado *</strong></label>
+                    {{ form.estado }}
+                    {% if form.estado.errors %}
+                        <ul class="errorlist">
+                            {% for error in form.estado.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            {% else %}
+                <!-- Modo creación: todos los campos -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.vehiculo.id_for_label }}">Vehículo *</label>
+                        {{ form.vehiculo }}
+                        {% if form.vehiculo.errors %}
+                            <ul class="errorlist">
+                                {% for error in form.vehiculo.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.cliente.id_for_label }}">Cliente *</label>
+                        {{ form.cliente }}
+                        {% if form.cliente.errors %}
+                            <ul class="errorlist">
+                                {% for error in form.cliente.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.fecha_inicio.id_for_label }}">Fecha de Inicio *</label>
+                        {{ form.fecha_inicio }}
+                        {% if form.fecha_inicio.errors %}
+                            <ul class="errorlist">
+                                {% for error in form.fecha_inicio.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.fecha_fin.id_for_label }}">Fecha de Fin *</label>
+                        {{ form.fecha_fin }}
+                        {% if form.fecha_fin.errors %}
+                            <ul class="errorlist">
+                                {% for error in form.fecha_fin.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.total.id_for_label }}">Total (COP) *</label>
+                        {{ form.total }}
+                        {% if form.total.errors %}
+                            <ul class="errorlist">
+                                {% for error in form.total.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.estado.id_for_label }}">Estado *</label>
+                        {{ form.estado }}
+                        {% if form.estado.errors %}
+                            <ul class="errorlist">
+                                {% for error in form.estado.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                <a href="{% url 'reserva_list' %}" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+.content-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 20px 0;
+    border-bottom: 2px solid #007bff;
+}
+
+.page-header h1 {
+    color: #333;
+    margin: 0;
+}
+
+.form-container {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+    box-sizing: border-box;
+    font-family: inherit;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.errorlist {
+    list-style: none;
+    padding: 0;
+    margin: 8px 0 0 0;
+    color: #721c24;
+    font-size: 12px;
+}
+
+.errorlist li {
+    padding: 5px 0;
+}
+
+.alert {
+    padding: 12px 16px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.alert-danger p {
+    margin: 0;
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 30px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+@media (max-width: 768px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Estilos para info-box de edición */
+.info-box {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 30px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
+.info-box h2 {
+    margin: 0 0 20px 0;
+    font-size: 20px;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.info-label {
+    font-weight: bold;
+    font-size: 13px;
+    opacity: 0.9;
+}
+
+.info-value {
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.info-value.price {
+    font-size: 18px;
+    color: #ffd700;
+    font-weight: bold;
+}
+
+.approval-section {
+    background: white;
+    border: 2px solid #667eea;
+    border-radius: 8px;
+    padding: 25px;
+    margin-bottom: 20px;
+}
+
+.approval-section h3 {
+    color: #333;
+    margin: 0 0 10px 0;
+    font-size: 18px;
+}
+
+.instructions {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 20px;
+    font-style: italic;
+}
+
+.approval-section .form-group {
+    margin-bottom: 25px;
+}
+
+.approval-section .form-group label {
+    font-size: 16px;
+    color: #333;
+}
+
+.approval-section select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: border-color 0.3s;
+}
+
+.approval-section select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.badge-pendiente {
+    background-color: rgba(255, 255, 255, 0.3);
+    color: white;
+}
+
+.badge-confirmada {
+    background-color: rgba(76, 175, 80, 0.2);
+    color: white;
+}
+
+.badge-cancelada {
+    background-color: rgba(244, 67, 54, 0.2);
+    color: white;
+}
+</style>
+{% endblock %}
+
+

@@ -1,0 +1,336 @@
+{% extends 'base.html' %}
+
+{% block title %}Nueva Reserva - ALQUIZERA{% endblock %}
+
+{% block content %}
+<div class="panel-container">
+    <div class="panel-header">
+        <h1>📅 Nueva Reserva</h1>
+        <p>Crea una nueva reserva de vehículo</p>
+    </div>
+
+    <div class="actions-bar">
+        <a href="{% url 'panel_cliente' %}" class="btn btn-secondary">← Volver al Panel</a>
+    </div>
+
+    <div class="form-container">
+        {% if vehiculo_seleccionado %}
+        <div class="vehiculo-info-card">
+            <h3>Vehículo Seleccionado</h3>
+            <p><strong>{{ vehiculo_seleccionado.marca }} {{ vehiculo_seleccionado.modelo }}</strong></p>
+            <p>Placa: {{ vehiculo_seleccionado.placa }}</p>
+            <p class="precio">Precio por día: ${{ vehiculo_seleccionado.costo_dia|floatformat:0 }} COP</p>
+        </div>
+        {% endif %}
+
+        <form method="post" novalidate id="reserva-form">
+            {% csrf_token %}
+            
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="form-group">
+                <label for="{{ form.vehiculo.id_for_label }}">Vehículo *</label>
+                {{ form.vehiculo }}
+                {% if form.vehiculo.errors %}
+                    <ul class="errorlist">
+                        {% for error in form.vehiculo.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.fecha_inicio.id_for_label }}">Fecha de Inicio *</label>
+                    {{ form.fecha_inicio }}
+                    {% if form.fecha_inicio.errors %}
+                        <ul class="errorlist">
+                            {% for error in form.fecha_inicio.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.fecha_fin.id_for_label }}">Fecha de Fin *</label>
+                    {{ form.fecha_fin }}
+                    {% if form.fecha_fin.errors %}
+                        <ul class="errorlist">
+                            {% for error in form.fecha_fin.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.total.id_for_label }}">Total (COP) *</label>
+                {{ form.total }}
+                <p class="help-text">El total se calculará automáticamente según las fechas y el vehículo seleccionado.</p>
+                {% if form.total.errors %}
+                    <ul class="errorlist">
+                        {% for error in form.total.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Crear Reserva</button>
+                <a href="{% url 'panel_cliente' %}" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+.panel-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.panel-header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 20px 0;
+    border-bottom: 2px solid #007bff;
+}
+
+.panel-header h1 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.panel-header p {
+    color: #666;
+    font-size: 16px;
+}
+
+.actions-bar {
+    margin-bottom: 20px;
+}
+
+.form-container {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+    box-sizing: border-box;
+    font-family: inherit;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.help-text {
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
+    margin-bottom: 0;
+}
+
+.errorlist {
+    list-style: none;
+    padding: 0;
+    margin: 8px 0 0 0;
+    color: #721c24;
+    font-size: 12px;
+}
+
+.errorlist li {
+    padding: 5px 0;
+}
+
+.alert {
+    padding: 12px 16px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.alert-danger p {
+    margin: 0;
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 30px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+.vehiculo-info-card {
+    background: #e7f3ff;
+    border: 1px solid #007bff;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.vehiculo-info-card h3 {
+    color: #007bff;
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.vehiculo-info-card p {
+    margin: 5px 0;
+    color: #333;
+}
+
+.vehiculo-info-card .precio {
+    font-size: 16px;
+    font-weight: bold;
+    color: #28a745;
+    margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const vehiculoSelect = document.getElementById('id_vehiculo');
+    const fechaInicioInput = document.getElementById('id_fecha_inicio');
+    const fechaFinInput = document.getElementById('id_fecha_fin');
+    const totalInput = document.getElementById('id_total');
+    
+    if (!vehiculoSelect || !fechaInicioInput || !fechaFinInput || !totalInput) {
+        return;
+    }
+    
+    function calcularTotal() {
+        const vehiculoId = vehiculoSelect.value;
+        const fechaInicio = fechaInicioInput.value;
+        const fechaFin = fechaFinInput.value;
+        
+        if (vehiculoId && fechaInicio && fechaFin) {
+            // Obtener el precio del option seleccionado
+            const selectedOption = vehiculoSelect.options[vehiculoSelect.selectedIndex];
+            const optionText = selectedOption.text;
+            
+            // Extraer el precio del texto de la opción (ej: "Volkswagen Golf - FSG 367 - $1500000")
+            const priceMatch = optionText.match(/\$[\d,]+/);
+            let precioDia = 0;
+            
+            if (priceMatch) {
+                precioDia = parseFloat(priceMatch[0].replace('$', '').replace(/,/g, ''));
+            } else {
+                // Si no se encuentra en el texto, intentar obtenerlo del data attribute
+                precioDia = parseFloat(selectedOption.dataset.precio) || 0;
+            }
+            
+            if (precioDia > 0) {
+                const inicio = new Date(fechaInicio + 'T00:00:00');
+                const fin = new Date(fechaFin + 'T00:00:00');
+                
+                if (fin >= inicio) {
+                    const diffTime = fin - inicio;
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+                    const total = precioDia * diffDays;
+                    totalInput.value = total.toFixed(0);
+                } else {
+                    totalInput.value = '';
+                }
+            } else {
+                totalInput.value = '';
+            }
+        } else {
+            totalInput.value = '';
+        }
+    }
+    
+    vehiculoSelect.addEventListener('change', calcularTotal);
+    fechaInicioInput.addEventListener('change', calcularTotal);
+    fechaFinInput.addEventListener('change', calcularTotal);
+    
+    // Calcular al cargar si hay valores preseleccionados
+    calcularTotal();
+});
+</script>
+{% endblock %}
+

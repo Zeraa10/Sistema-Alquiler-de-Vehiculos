@@ -1,0 +1,300 @@
+{% extends 'base.html' %}
+
+{% block title %}Vehículos - ALQUIZERA{% endblock %}
+
+{% block content %}
+<div class="content-container">
+    <div class="page-header">
+        <h1>🚗 Vehículos</h1>
+        {% if user.is_authenticated and user.is_staff %}
+        <a href="{% url 'vehiculo_create' %}" class="btn btn-primary">+ Nuevo Vehículo</a>
+        {% endif %}
+    </div>
+
+    <div class="actions-bar">
+        <a href="{% url 'home' %}" class="btn btn-secondary">← Volver al Inicio</a>
+        {% if user.is_authenticated and user.is_staff %}
+        <a href="{% url 'panel_admin' %}" class="btn btn-secondary">← Panel Admin</a>
+        {% endif %}
+    </div>
+
+    <!-- Formulario de Filtros -->
+    <div class="filter-container">
+        <form method="get" class="filter-form">
+            <div class="filter-group">
+                <input type="text" name="marca" placeholder="Marca" value="{{ form.marca.value|default:'' }}" class="filter-input">
+                <input type="text" name="modelo" placeholder="Modelo" value="{{ form.modelo.value|default:'' }}" class="filter-input">
+                <input type="number" name="precio_min" placeholder="Precio mínimo" step="0.01" value="{{ form.precio_min.value|default:'' }}" class="filter-input">
+                <input type="number" name="precio_max" placeholder="Precio máximo" step="0.01" value="{{ form.precio_max.value|default:'' }}" class="filter-input">
+                <select name="disponible" class="filter-input">
+                    <option value="">Todos</option>
+                    <option value="true" {% if form.disponible.value == 'True' %}selected{% endif %}>Solo disponibles</option>
+                    <option value="false" {% if form.disponible.value == 'False' %}selected{% endif %}>Solo no disponibles</option>
+                </select>
+                <button type="submit" class="btn btn-primary">🔍 Filtrar</button>
+                <a href="{% url 'vehiculo_list' %}" class="btn btn-secondary">Limpiar</a>
+            </div>
+        </form>
+    </div>
+
+    {% if vehiculo_list %}
+    <div class="vehiculos-grid">
+        {% for vehiculo in vehiculo_list %}
+        <div class="vehiculo-card">
+            {% if vehiculo.imagen %}
+            <div class="vehiculo-image">
+                <img src="{{ vehiculo.imagen.url }}" alt="{{ vehiculo.marca }} {{ vehiculo.modelo }}" class="vehiculo-img">
+            </div>
+            {% else %}
+            <div class="vehiculo-image no-image">
+                <div class="no-image-placeholder">🚗</div>
+            </div>
+            {% endif %}
+            <div class="vehiculo-info">
+                <h3>{{ vehiculo.marca }} {{ vehiculo.modelo }}</h3>
+                <p class="placa">Placa: <strong>{{ vehiculo.placa }}</strong></p>
+                {% if vehiculo.color %}
+                <p class="color">Color: {{ vehiculo.color }}</p>
+                {% endif %}
+                <p class="precio">${{ vehiculo.costo_dia|floatformat:0 }} COP/día</p>
+                <div class="status-badge {% if vehiculo.disponible %}disponible{% else %}no-disponible{% endif %}">
+                    {% if vehiculo.disponible %}Disponible{% else %}No Disponible{% endif %}
+                </div>
+            </div>
+            <div class="vehiculo-actions">
+                <a href="{% url 'vehiculo_detail' vehiculo.pk %}" class="btn btn-primary">Ver Detalle</a>
+                {% if user.is_authenticated and user.is_staff %}
+                <a href="{% url 'vehiculo_update' vehiculo.pk %}" class="btn btn-secondary">Editar</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <p>No hay vehículos que coincidan con los filtros.</p>
+        {% if user.is_authenticated and user.is_staff %}
+        <a href="{% url 'vehiculo_create' %}" class="btn btn-primary">Crear Primer Vehículo</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.content-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 20px 0;
+    border-bottom: 2px solid #007bff;
+}
+
+.page-header h1 {
+    color: #333;
+    margin: 0;
+}
+
+.actions-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.filter-container {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.filter-form {
+    width: 100%;
+}
+
+.filter-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.filter-input {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.filter-input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+.vehiculos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.vehiculo-card {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    display: flex;
+    flex-direction: column;
+}
+
+.vehiculo-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+.vehiculo-image {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    background-color: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.vehiculo-image.no-image {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.no-image-placeholder {
+    font-size: 64px;
+    opacity: 0.5;
+}
+
+.vehiculo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.vehiculo-info {
+    padding: 20px;
+}
+
+.vehiculo-info h3 {
+    color: #333;
+    margin-bottom: 15px;
+    font-size: 20px;
+}
+
+.vehiculo-info p {
+    color: #666;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.vehiculo-info .placa {
+    font-weight: bold;
+    color: #007bff;
+}
+
+.vehiculo-info .precio {
+    font-size: 18px;
+    font-weight: bold;
+    color: #28a745;
+    margin-top: 10px;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.status-badge.disponible {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.status-badge.no-disponible {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.vehiculo-actions {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.empty-state p {
+    color: #666;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+@media (max-width: 768px) {
+    .filter-group {
+        flex-direction: column;
+    }
+
+    .filter-input {
+        width: 100%;
+    }
+}
+</style>
+{% endblock %}
+

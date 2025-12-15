@@ -1,0 +1,325 @@
+{% extends 'base.html' %}
+
+{% block title %}ALQUIZERA - Alquiler de Vehículos{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="hero-content">
+        <h1>ALQUIZERA</h1>
+        <p class="tagline">Tu solución confiable para alquilar vehículos</p>
+        <div class="cta-buttons">
+            {% if user.is_authenticated %}
+                {% if user.is_staff or user.is_superuser %}
+                    <a href="{% url 'panel_admin' %}" class="btn btn-primary btn-lg">Ir al Panel Admin</a>
+                {% else %}
+                    <a href="{% url 'panel_cliente' %}" class="btn btn-primary btn-lg">Ir a Mi Panel</a>
+                {% endif %}
+            {% else %}
+                <a href="{% url 'vehiculo_list' %}" class="btn btn-primary btn-lg">Ver Vehículos</a>
+                <a href="{% url 'login' %}" class="btn btn-secondary btn-lg">Iniciar Sesión</a>
+                <a href="{% url 'register' %}" class="btn btn-outline btn-lg">Registrarse</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="features-section">
+    <div class="container">
+        <h2>¿Por qué elegir ALQUIZERA?</h2>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🚗</div>
+                <h3>Amplio Catálogo</h3>
+                <p>Contamos con una variedad de vehículos en excelente estado para todas tus necesidades.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">💰</div>
+                <h3>Precios Competitivos</h3>
+                <p>Disfruta de tarifas justas y transparentes sin cargos ocultos.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🛡️</div>
+                <h3>Seguridad Garantizada</h3>
+                <p>Todos nuestros vehículos están asegurados y en perfecto estado de funcionamiento.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Proceso Rápido</h3>
+                <p>Reserva en minutos y recoge tu vehículo sin complicaciones.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">👥</div>
+                <h3>Atención al Cliente</h3>
+                <p>Equipo profesional disponible para resolver todas tus dudas.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3>Fácil de Usar</h3>
+                <p>Plataforma intuitiva para gestionar tus reservas de forma sencilla.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="how-it-works-section">
+    <div class="container">
+        <h2>¿Cómo funciona ALQUIZERA?</h2>
+        
+        <div class="steps-grid">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3>Regístrate</h3>
+                <p>Crea tu cuenta proporcionando tus datos personales y licencia de conducir.</p>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3>Elige tu Vehículo</h3>
+                <p>Explora nuestro catálogo y selecciona el vehículo que mejor se adapte a tus necesidades.</p>
+            </div>
+
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3>Realiza tu Reserva</h3>
+                <p>Selecciona las fechas de inicio y fin para tu alquiler.</p>
+            </div>
+
+            <div class="step">
+                <div class="step-number">4</div>
+                <h3>Recoge y Disfruta</h3>
+                <p>Retira tu vehículo en la fecha acordada y ¡a disfrutar!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="cta-section">
+    <div class="container">
+        <h2>¿Listo para empezar?</h2>
+        <p>No esperes más, reserva tu vehículo hoy mismo</p>
+        {% if not user.is_authenticated %}
+            <a href="{% url 'register' %}" class="btn btn-primary btn-lg">Regístrate Ahora</a>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.hero-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 100px 20px;
+    text-align: center;
+}
+
+.hero-content h1 {
+    font-size: 48px;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.tagline {
+    font-size: 20px;
+    margin-bottom: 30px;
+    opacity: 0.9;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn-lg {
+    padding: 12px 30px;
+    font-size: 16px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.btn-secondary {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.btn-outline {
+    background-color: transparent;
+    color: white;
+    border: 2px solid white;
+}
+
+.btn-outline:hover {
+    background-color: white;
+    color: #667eea;
+    transform: translateY(-2px);
+}
+
+.features-section {
+    padding: 80px 20px;
+    background-color: #f8f9fa;
+}
+
+.features-section h2 {
+    text-align: center;
+    font-size: 32px;
+    margin-bottom: 50px;
+    color: #333;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.feature-card {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+.feature-icon {
+    font-size: 48px;
+    margin-bottom: 15px;
+}
+
+.feature-card h3 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.feature-card p {
+    color: #666;
+    line-height: 1.6;
+}
+
+.how-it-works-section {
+    padding: 80px 20px;
+    background-color: white;
+}
+
+.how-it-works-section h2 {
+    text-align: center;
+    font-size: 32px;
+    margin-bottom: 50px;
+    color: #333;
+}
+
+.steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.step {
+    text-align: center;
+}
+
+.step-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 50%;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.step h3 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.step p {
+    color: #666;
+    line-height: 1.6;
+}
+
+.cta-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.cta-section h2 {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.cta-section p {
+    font-size: 18px;
+    margin-bottom: 30px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+    .hero-content h1 {
+        font-size: 36px;
+    }
+
+    .tagline {
+        font-size: 16px;
+    }
+
+    .features-section h2,
+    .how-it-works-section h2,
+    .cta-section h2 {
+        font-size: 24px;
+    }
+
+    .cta-buttons {
+        flex-direction: column;
+    }
+
+    .btn-lg {
+        width: 100%;
+    }
+}
+</style>
+{% endblock %}
+

@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalle de Reserva - ALQUIZERA{% endblock %}
+
+{% block content %}
+<div class="content-container">
+    <div class="page-header">
+        <h1>📅 Detalle de Reserva #{{ reserva.id }}</h1>
+        <div class="header-actions">
+            <a href="{% url 'reserva_update' reserva.pk %}" class="btn btn-primary">Editar</a>
+            <a href="{% url 'reserva_list' %}" class="btn btn-secondary">← Volver</a>
+        </div>
+    </div>
+
+    <div class="detail-card">
+        <div class="detail-section">
+            <h3>Información de la Reserva</h3>
+            <div class="detail-row">
+                <span class="label">Cliente:</span>
+                <span class="value">{{ reserva.cliente }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Vehículo:</span>
+                <span class="value">{{ reserva.vehiculo.marca }} {{ reserva.vehiculo.modelo }} - {{ reserva.vehiculo.placa }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Fecha de Inicio:</span>
+                <span class="value">{{ reserva.fecha_inicio|date:"d/m/Y" }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Fecha de Fin:</span>
+                <span class="value">{{ reserva.fecha_fin|date:"d/m/Y" }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Total:</span>
+                <span class="value price">${{ reserva.total|floatformat:0 }} COP</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Estado:</span>
+                <span class="value">
+                    <span class="badge badge-{{ reserva.estado }}">
+                        {{ reserva.get_estado_display }}
+                    </span>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.content-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 20px 0;
+    border-bottom: 2px solid #007bff;
+}
+
+.page-header h1 {
+    color: #333;
+    margin: 0;
+}
+
+.header-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.detail-card {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.detail-section h3 {
+    color: #333;
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.detail-row .label {
+    font-weight: bold;
+    color: #666;
+}
+
+.detail-row .value {
+    color: #333;
+}
+
+.detail-row .value.price {
+    font-size: 18px;
+    font-weight: bold;
+    color: #28a745;
+}
+
+.badge {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.badge-pendiente {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.badge-confirmada {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.badge-cancelada {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+</style>
+{% endblock %}
+
+

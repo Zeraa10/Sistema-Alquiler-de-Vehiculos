@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+
+{% block title %}Cancelar Reserva - ALQUIZERA{% endblock %}
+
+{% block content %}
+<div class="panel-container">
+    <div class="panel-header">
+        <h1>⚠️ Cancelar Reserva</h1>
+        <p>¿Estás seguro de que deseas cancelar esta reserva?</p>
+    </div>
+
+    <div class="confirm-container">
+        <div class="confirm-box">
+            <h3>Detalles de la Reserva</h3>
+            <p><strong>Vehículo:</strong> {{ reserva.vehiculo.marca }} {{ reserva.vehiculo.modelo }}</p>
+            <p><strong>Placa:</strong> {{ reserva.vehiculo.placa }}</p>
+            <p><strong>Fecha Inicio:</strong> {{ reserva.fecha_inicio|date:"d/m/Y" }}</p>
+            <p><strong>Fecha Fin:</strong> {{ reserva.fecha_fin|date:"d/m/Y" }}</p>
+            <p><strong>Total:</strong> ${{ reserva.total|floatformat:0 }} COP</p>
+            <p><strong>Estado:</strong> <span class="badge badge-{{ reserva.estado }}">{{ reserva.get_estado_display }}</span></p>
+        </div>
+
+        <div class="warning-box">
+            <p>Al cancelar esta reserva:</p>
+            <ul>
+                <li>El vehículo volverá a estar disponible</li>
+                <li>Tu reserva pasará al estado "Cancelada"</li>
+                <li>Esta acción no se puede deshacer</li>
+            </ul>
+        </div>
+
+        <form method="post" class="confirm-form">
+            {% csrf_token %}
+            <a href="{% url 'cliente_mis_reservas' %}" class="btn btn-secondary">Volver</a>
+            <button type="submit" class="btn btn-danger">Sí, Cancelar Reserva</button>
+        </form>
+    </div>
+</div>
+
+<style>
+.panel-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.panel-header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 20px 0;
+    border-bottom: 2px solid #dc3545;
+}
+
+.panel-header h1 {
+    color: #dc3545;
+    margin-bottom: 10px;
+}
+
+.panel-header p {
+    color: #666;
+    font-size: 16px;
+}
+
+.confirm-container {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.confirm-box {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border-left: 4px solid #007bff;
+}
+
+.confirm-box h3 {
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.confirm-box p {
+    color: #666;
+    margin: 8px 0;
+    line-height: 1.6;
+}
+
+.warning-box {
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 25px;
+    border-left: 4px solid #ff9800;
+}
+
+.warning-box p {
+    color: #856404;
+    font-weight: bold;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.warning-box ul {
+    margin: 0;
+    padding-left: 20px;
+    color: #856404;
+}
+
+.warning-box li {
+    margin: 5px 0;
+}
+
+.confirm-form {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.badge {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.badge-pendiente {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.badge-confirmada {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.badge-cancelada {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 30px;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+@media (max-width: 768px) {
+    .confirm-form {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+        box-sizing: border-box;
+    }
+}
+</style>
+{% endblock %}

@@ -1,0 +1,220 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalle de Vehículo - ALQUIZERA{% endblock %}
+
+{% block content %}
+<div class="content-container">
+    <div class="page-header">
+        <h1>🚗 Detalle de Vehículo</h1>
+        {% if user.is_authenticated and user.is_staff %}
+        <div class="header-actions">
+            <a href="{% url 'vehiculo_update' vehiculo.pk %}" class="btn btn-primary">Editar</a>
+            <a href="{% url 'vehiculo_list' %}" class="btn btn-secondary">← Volver</a>
+        </div>
+        {% else %}
+        <a href="{% url 'vehiculo_list' %}" class="btn btn-secondary">← Volver</a>
+        {% endif %}
+    </div>
+
+    <div class="detail-card">
+        {% if vehiculo.imagen %}
+        <div class="vehiculo-image-large">
+            <img src="{{ vehiculo.imagen.url }}" alt="{{ vehiculo.marca }} {{ vehiculo.modelo }}" class="vehiculo-detail-img">
+        </div>
+        {% else %}
+        <div class="vehiculo-image-large no-image">
+            <div class="no-image-placeholder-large">🚗</div>
+            <p>Sin imagen</p>
+        </div>
+        {% endif %}
+        
+        <div class="detail-section">
+            <h3>Información del Vehículo</h3>
+            <div class="detail-row">
+                <span class="label">Marca:</span>
+                <span class="value">{{ vehiculo.marca }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Modelo:</span>
+                <span class="value">{{ vehiculo.modelo }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Placa:</span>
+                <span class="value">{{ vehiculo.placa }}</span>
+            </div>
+            {% if vehiculo.color %}
+            <div class="detail-row">
+                <span class="label">Color:</span>
+                <span class="value">{{ vehiculo.color }}</span>
+            </div>
+            {% endif %}
+            <div class="detail-row">
+                <span class="label">Costo por día:</span>
+                <span class="value price">${{ vehiculo.costo_dia|floatformat:0 }} COP</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Estado:</span>
+                <span class="value">
+                    <span class="badge {% if vehiculo.disponible %}disponible{% else %}no-disponible{% endif %}">
+                        {% if vehiculo.disponible %}Disponible{% else %}No Disponible{% endif %}
+                    </span>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.content-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 20px 0;
+    border-bottom: 2px solid #007bff;
+}
+
+.page-header h1 {
+    color: #333;
+    margin: 0;
+}
+
+.header-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.detail-card {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.vehiculo-image-large {
+    width: 100%;
+    height: 400px;
+    overflow: hidden;
+    background-color: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.vehiculo-image-large.no-image {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    flex-direction: column;
+}
+
+.no-image-placeholder-large {
+    font-size: 120px;
+    opacity: 0.5;
+    margin-bottom: 10px;
+}
+
+.vehiculo-image-large.no-image p {
+    color: white;
+    font-size: 18px;
+    opacity: 0.7;
+}
+
+.vehiculo-detail-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.detail-section {
+    padding: 30px;
+}
+
+.detail-section h3 {
+    color: #333;
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.detail-row .label {
+    font-weight: bold;
+    color: #666;
+}
+
+.detail-row .value {
+    color: #333;
+}
+
+.detail-row .value.price {
+    font-size: 18px;
+    font-weight: bold;
+    color: #28a745;
+}
+
+.badge {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.badge.disponible {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.badge.no-disponible {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+</style>
+{% endblock %}
+
