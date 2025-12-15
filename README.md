@@ -61,14 +61,12 @@ ALQUIZERA es una aplicación web para gestionar el alquiler de vehículos, desar
 **1. Clonar el repositorio**
 
 ```
-bash
 git clone https://github.com/Zeraa10/Sistema-Alquiler-de-Vehiculos.git
 cd Sistema-Alquiler-de-Vehiculos
 ```
 **2.Crear y activar un entorno virtual**
 
 ```
-bash
 python -m venv venv
 # Windows
 venv\Scripts\activate
@@ -78,7 +76,6 @@ source venv/bin/activate
 **3. Instalar dependencias**
 
 ```
-bash
 pip install -r requirements.txt
 ```
 **4. Configurar variables de entorno**
@@ -86,7 +83,6 @@ pip install -r requirements.txt
 Copia el archivo de ejemplo y ajusta tus credenciales:
 
 ```
-bash
 cp .env.example .env
 ```
 Edita .env con:
@@ -98,13 +94,11 @@ Edita .env con:
 
 **5. Aplicar migraciones**
 ```
-bash
 python manage.py migrate
 ```
 
 **6. Crear superusuario (administrador)**
 ```
-bash
 python manage.py createsuperuser
 ```
 
@@ -117,7 +111,6 @@ Si tienes fixtures o scripts para categorías de licencia, puedes ejecutarlos aq
 
 **8. Levantar el servidor de desarrollo**
 ```
-bash
 python manage.py runserver
 ```
 Abre en el navegador:
