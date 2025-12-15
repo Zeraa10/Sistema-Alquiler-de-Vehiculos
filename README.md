@@ -1,8 +1,8 @@
-ALQUIZERA – Sistema de Alquiler de Vehículos
+# ALQUIZERA – Sistema de Alquiler de Vehículos
 
 ALQUIZERA es una aplicación web para gestionar el alquiler de vehículos, desarrollada con Django y PostgreSQL, que ofrece paneles separados para clientes y administradores, reservas en línea y gestión completa del inventario de vehículos.
 
-**Características principales**
+## **Características principales**
 **-Autenticación y roles**
 
 -Registro e inicio de sesión de clientes.
@@ -41,7 +41,7 @@ ALQUIZERA es una aplicación web para gestionar el alquiler de vehículos, desar
 
 -Enlaces directos para ver vehículos, iniciar sesión y registrarse.
 
-**Tecnologías utilizadas**
+## **Tecnologías utilizadas**
 **-Backend:** Django (Python)
 
 **-Base de datos:** PostgreSQL
@@ -50,14 +50,14 @@ ALQUIZERA es una aplicación web para gestionar el alquiler de vehículos, desar
 
 **-Otros:** Git, entorno virtual de Python (venv)
 
-**Requisitos previos**
+## **Requisitos previos**
 -Python 3.10+
 
 -PostgreSQL instalado y una base de datos creada (por ejemplo alquiler_vehiculos)
 
 -Git
 
-**Instalación y configuración**
+## **Instalación y configuración**
 **1. Clonar el repositorio**
 
 ```
@@ -125,7 +125,7 @@ http://127.0.0.1:8000/panel-cliente/ → Panel de cliente (tras autenticarse).
 
 http://127.0.0.1:8000/panel-admin/ → Panel de administración (usuario admin).
 
-**Estructura del proyecto**
+## **Estructura del proyecto**
 
 ```
 alquiler-vehiculos/
